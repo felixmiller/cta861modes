@@ -81,9 +81,9 @@ package video_timings_pkg is
 # Add the records to the array
 for mode in video_timings:
     vhdl_package += """
-        {vic:>3} => ({name:<20}, {vic:>4}, {pxl_clk_khz:>14}, {interlaced:>11}, {dbl_clkd:>15}, {hactive:>8}, {vactive:>8}, {hfront:>7}, {hsync:>6}, {hback:>6},   '{hpol}', {vfront:>7}, {vsync:>6}, {vback:>6},   '{vpol}',  {ln} ),""".format(
+        {vic:>3} => ("{name:<20}", {vic:>4}, {pxl_clk_khz:>14}, {interlaced:>11}, {dbl_clkd:>15}, {hactive:>8}, {vactive:>8}, {hfront:>7}, {hsync:>6}, {hback:>6},   '{hpol}', {vfront:>7}, {vsync:>6}, {vback:>6},   '{vpol}',  {ln} ),""".format(
         vic=mode['vic'],
-        name="\"" + mode['name'] + "\"",
+        name=mode['name'],
         pxl_clk_khz=mode['pxl_clk_khz'],
         interlaced=str(mode['interlaced']).lower(),
         dbl_clkd=str(mode['double_clocked']).lower(),
@@ -101,7 +101,7 @@ for mode in video_timings:
     )
 
 # Remove the last comma and add the closing parenthesis
-vhdl_package = vhdl_package.rstrip(',') + "\n    );\nend package video_timings_pkg;\n"
+vhdl_package += "\n     others => (\"--------------------\",    0,              0,       false,           false,        0,        0,       0,      0,      0,   '0',       0,      0,      0,   '0',  0 )\n    );\nend package video_timings_pkg;\n"
 
 # Write the VHDL package to a file
 with open('video_timings_pkg.vhdl', 'w') as vhdl_file:
